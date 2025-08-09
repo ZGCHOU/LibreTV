@@ -34,7 +34,7 @@ export default async (request, context) => {
   if (password) {
     passwordHash = await sha256(password);
   }
-  const disableAuth = Netlify.env.get('DISABLE_AUTH') === 'true' ? 'true' : 'false';
+  const disableAuth = Netlify.env.get('DISABLE_AUTH') === 'false' ? 'false' : 'true';
   
   let modifiedHtml = originalHtml.replace(
     'window.__ENV__.PASSWORD = "{{PASSWORD}}";',

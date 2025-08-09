@@ -30,7 +30,7 @@ export default async function middleware(request) {
   if (password) {
     passwordHash = await sha256(password);
   }
-  const disableAuth = process.env.DISABLE_AUTH === 'true' ? 'true' : 'false';
+  const disableAuth = process.env.DISABLE_AUTH === 'false' ? 'false' : 'true';
   
   // 替换密码占位符
   let modifiedHtml = originalHtml.replace(
