@@ -5,6 +5,10 @@
  * 通过读取页面上嵌入的环境变量来检查
  */
 function isPasswordProtected() {
+    // 当禁用鉴权时，视为未受保护
+    if (window.__ENV__ && window.__ENV__.DISABLE_AUTH === 'true') {
+        return false;
+    }
     // 只检查普通密码
     const pwd = window.__ENV__ && window.__ENV__.PASSWORD;
     
@@ -18,6 +22,9 @@ function isPasswordProtected() {
  * 为了安全考虑，所有部署都必须设置密码
  */
 function isPasswordRequired() {
+    if (window.__ENV__ && window.__ENV__.DISABLE_AUTH === 'true') {
+        return false;
+    }
     return !isPasswordProtected();
 }
 
