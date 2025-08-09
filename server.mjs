@@ -22,6 +22,7 @@ const config = {
   userAgent: process.env.USER_AGENT || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
   debug: process.env.DEBUG === 'true'
 };
+config.disableAuth = process.env.DISABLE_AUTH === 'true';
 
 const log = (...args) => {
   if (config.debug) {
@@ -60,6 +61,7 @@ async function renderPage(filePath, password) {
   } else {
     content = content.replace('{{PASSWORD}}', '');
   }
+  content = content.replace('{{DISABLE_AUTH}}', (config.disableAuth ? 'true' : 'false'));
   return content;
 }
 
@@ -120,6 +122,9 @@ function isValidUrl(urlString) {
 
 // 验证代理请求的鉴权
 function validateProxyAuth(req) {
+  if (config.disableAuth) {
+    return true;
+  }
   const authHash = req.query.auth;
   const timestamp = req.query.t;
   

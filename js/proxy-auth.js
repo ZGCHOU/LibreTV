@@ -10,6 +10,9 @@ let cachedPasswordHash = null;
  * 获取当前会话的密码哈希
  */
 async function getPasswordHash() {
+    if (window.__ENV__ && window.__ENV__.DISABLE_AUTH === 'true') {
+        return null;
+    }
     if (cachedPasswordHash) {
         return cachedPasswordHash;
     }
@@ -61,7 +64,9 @@ async function addAuthToProxyUrl(url) {
     try {
         const hash = await getPasswordHash();
         if (!hash) {
-            console.warn('无法获取密码哈希，代理请求可能失败');
+            if (!(window.__ENV__ && window.__ENV__.DISABLE_AUTH === 'true')) {
+                console.warn('无法获取密码哈希，代理请求可能失败');
+            }
             return url;
         }
         

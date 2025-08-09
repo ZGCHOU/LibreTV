@@ -17,6 +17,10 @@ export async function onRequest(context) {
     html = html.replace('window.__ENV__.PASSWORD = "{{PASSWORD}}";', 
       `window.__ENV__.PASSWORD = "${passwordHash}";`);
     
+    const disableAuth = (env.DISABLE_AUTH === 'true') ? 'true' : 'false';
+    html = html.replace('window.__ENV__.DISABLE_AUTH = "{{DISABLE_AUTH}}";', 
+      `window.__ENV__.DISABLE_AUTH = "${disableAuth}";`);
+    
     return new Response(html, {
       headers: response.headers,
       status: response.status,

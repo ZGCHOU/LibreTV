@@ -304,6 +304,9 @@ async function processMasterPlaylist(url, content, recursionDepth) {
  * 验证代理请求的鉴权
  */
 async function validateAuth(req) {
+    if (process.env.DISABLE_AUTH === 'true') {
+        return true;
+    }
     const authHash = req.query.auth;
     const timestamp = req.query.t;
     

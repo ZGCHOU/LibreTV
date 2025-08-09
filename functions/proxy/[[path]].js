@@ -74,6 +74,9 @@ export async function onRequest(context) {
 
     // 验证代理请求的鉴权
     async function validateAuth(request, env) {
+        if (env.DISABLE_AUTH === 'true') {
+            return true;
+        }
         const url = new URL(request.url);
         const authHash = url.searchParams.get('auth');
         const timestamp = url.searchParams.get('t');
