@@ -118,11 +118,9 @@ function updateDoubanVisibility() {
     if (!doubanArea) return;
     
     const isEnabled = localStorage.getItem('doubanEnabled') === 'true';
-    const isSearching = document.getElementById('resultsArea') && 
-        !document.getElementById('resultsArea').classList.contains('hidden');
     
-    // 只有在启用且没有搜索结果显示时才显示豆瓣区域
-    if (isEnabled && !isSearching) {
+    // 如果豆瓣功能启用，则显示豆瓣区域
+    if (isEnabled) {
         doubanArea.classList.remove('hidden');
         // 如果豆瓣结果为空，重新加载
         if (document.getElementById('douban-results').children.length === 0) {
@@ -177,11 +175,11 @@ function fillAndSearch(title) {
             // 使用HTML5 History API更新URL，不刷新页面
             window.history.pushState(
                 { search: safeTitle }, 
-                `搜索: ${safeTitle} - LibreTV`, 
+                `搜索: ${safeTitle} - TV-Show`, 
                 `/s=${encodedQuery}`
             );
             // 更新页面标题
-            document.title = `搜索: ${safeTitle} - LibreTV`;
+            document.title = `搜索: ${safeTitle} - TV-Show`;
         } catch (e) {
             console.error('更新浏览器历史失败:', e);
         }
@@ -237,11 +235,11 @@ async function fillAndSearchWithDouban(title) {
             // 使用HTML5 History API更新URL，不刷新页面
             window.history.pushState(
                 { search: safeTitle }, 
-                `搜索: ${safeTitle} - LibreTV`, 
+                `搜索: ${safeTitle} - TV-Show`, 
                 `/s=${encodedQuery}`
             );
             // 更新页面标题
-            document.title = `搜索: ${safeTitle} - LibreTV`;
+            document.title = `搜索: ${safeTitle} - TV-Show`;
         } catch (e) {
             console.error('更新浏览器历史失败:', e);
         }
