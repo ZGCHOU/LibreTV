@@ -105,6 +105,12 @@ document.addEventListener('DOMContentLoaded', function () {
 // 初始化API复选框
 function initAPICheckboxes() {
     const container = document.getElementById('apiCheckboxes');
+    // 如果设置面板不存在，则跳过初始化
+    if (!container) {
+        console.log('设置面板不存在，跳过API复选框初始化');
+        return;
+    }
+    
     container.innerHTML = '';
 
     // 添加普通API组标题
@@ -154,6 +160,11 @@ function addAdultAPI() {
     // 仅在隐藏设置为false时添加成人API组
     if (!HIDE_BUILTIN_ADULT_APIS && (localStorage.getItem('yellowFilterEnabled') === 'false')) {
         const container = document.getElementById('apiCheckboxes');
+        
+        // 如果设置面板不存在，则跳过
+        if (!container) {
+            return;
+        }
 
         // 添加成人API组标题
         const adultdiv = document.createElement('div');
@@ -198,6 +209,15 @@ function addAdultAPI() {
 
 // 检查是否有成人API被选中
 function checkAdultAPIsSelected() {
+    // 如果设置面板不存在，则跳过检查
+    const apiCheckboxes = document.getElementById('apiCheckboxes');
+    const customApisList = document.getElementById('customApisList');
+    const yellowFilterToggle = document.getElementById('yellowFilterToggle');
+    
+    if (!apiCheckboxes || !customApisList || !yellowFilterToggle) {
+        return;
+    }
+    
     // 查找所有内置成人API复选框
     const adultBuiltinCheckboxes = document.querySelectorAll('#apiCheckboxes .api-adult:checked');
 
@@ -206,7 +226,6 @@ function checkAdultAPIsSelected() {
 
     const hasAdultSelected = adultBuiltinCheckboxes.length > 0 || customApiCheckboxes.length > 0;
 
-    const yellowFilterToggle = document.getElementById('yellowFilterToggle');
     const yellowFilterContainer = yellowFilterToggle.closest('div').parentNode;
     const filterDescription = yellowFilterContainer.querySelector('p.filter-description');
 
@@ -250,7 +269,11 @@ function checkAdultAPIsSelected() {
 // 渲染自定义API列表
 function renderCustomAPIsList() {
     const container = document.getElementById('customApisList');
-    if (!container) return;
+    // 如果设置面板不存在，则跳过渲染
+    if (!container) {
+        console.log('设置面板不存在，跳过自定义API列表渲染');
+        return;
+    }
 
     if (customAPIs.length === 0) {
         container.innerHTML = '<p class="text-xs text-gray-500 text-center my-2">未添加自定义API</p>';
@@ -374,6 +397,14 @@ function restoreAddCustomApiButtons() {
 
 // 更新选中的API列表
 function updateSelectedAPIs() {
+    // 如果设置面板不存在，则跳过更新
+    const apiCheckboxes = document.getElementById('apiCheckboxes');
+    const customApisList = document.getElementById('customApisList');
+    
+    if (!apiCheckboxes || !customApisList) {
+        return;
+    }
+    
     // 获取所有内置API复选框
     const builtInApiCheckboxes = document.querySelectorAll('#apiCheckboxes input:checked');
 
@@ -404,6 +435,13 @@ function updateSelectedApiCount() {
 
 // 全选或取消全选API
 function selectAllAPIs(selectAll = true, excludeAdult = false) {
+    const apiCheckboxes = document.getElementById('apiCheckboxes');
+    
+    // 如果设置面板不存在，则跳过
+    if (!apiCheckboxes) {
+        return;
+    }
+    
     const checkboxes = document.querySelectorAll('#apiCheckboxes input[type="checkbox"]');
 
     checkboxes.forEach(checkbox => {
@@ -431,10 +469,16 @@ function cancelAddCustomApi() {
     const form = document.getElementById('addCustomApiForm');
     if (form) {
         form.classList.add('hidden');
-        document.getElementById('customApiName').value = '';
-        document.getElementById('customApiUrl').value = '';
-        document.getElementById('customApiDetail').value = '';
+        
+        // 如果设置面板存在，则清空输入框
+        const nameInput = document.getElementById('customApiName');
+        const urlInput = document.getElementById('customApiUrl');
+        const detailInput = document.getElementById('customApiDetail');
         const isAdultInput = document.getElementById('customApiIsAdult');
+        
+        if (nameInput) nameInput.value = '';
+        if (urlInput) urlInput.value = '';
+        if (detailInput) detailInput.value = '';
         if (isAdultInput) isAdultInput.checked = false;
 
         // 确保按钮是添加按钮
@@ -448,6 +492,13 @@ function addCustomApi() {
     const urlInput = document.getElementById('customApiUrl');
     const detailInput = document.getElementById('customApiDetail');
     const isAdultInput = document.getElementById('customApiIsAdult');
+    
+    // 如果设置面板不存在，则跳过
+    if (!nameInput || !urlInput) {
+        showToast('设置面板不可用', 'error');
+        return;
+    }
+    
     const name = nameInput.value.trim();
     let url = urlInput.value.trim();
     const detail = detailInput ? detailInput.value.trim() : '';
@@ -478,7 +529,13 @@ function addCustomApi() {
     urlInput.value = '';
     if (detailInput) detailInput.value = '';
     if (isAdultInput) isAdultInput.checked = false;
-    document.getElementById('addCustomApiForm').classList.add('hidden');
+    
+    // 如果设置面板存在，则隐藏表单
+    const addCustomApiForm = document.getElementById('addCustomApiForm');
+    if (addCustomApiForm) {
+        addCustomApiForm.classList.add('hidden');
+    }
+    
     showToast('已添加自定义API: ' + name, 'success');
 }
 
