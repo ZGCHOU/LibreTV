@@ -859,13 +859,37 @@ async function search() {
             `;
         }).join('');
 
-        resultsDiv.innerHTML = safeResults;
+        // 检查是否有搜索结果
+        if (allResults.length > 0) {
+            // 有结果时，显示结果
+            const resultsDiv = document.getElementById('results');
+            if (resultsDiv) {
+                resultsDiv.innerHTML = safeResults;
+            }
+            
+            // 有结果时不显示搜索失败弹窗，只显示成功提示
+            showToast(`搜索完成，找到 ${allResults.length} 个结果`, 'success');
+        } else {
+            // 没有结果时，显示无结果信息
+            showNoResults();
+            
+            // 只有在完全没有结果时才显示搜索失败弹窗
+            showToast('未找到相关结果，请尝试其他关键词', 'warning');
+        }
     } catch (error) {
         console.error('搜索错误:', error);
-        if (error.name === 'AbortError') {
-            showToast('搜索请求超时，请检查网络连接', 'error');
+        
+        // 检查是否有部分结果
+        if (allResults.length > 0) {
+            // 有部分结果时，不显示错误弹窗，只记录错误
+            console.warn('部分API搜索失败，但仍有可用结果');
         } else {
-            showToast('搜索请求失败，请稍后重试', 'error');
+            // 完全没有结果时才显示错误弹窗
+            if (error.name === 'AbortError') {
+                showToast('搜索请求超时，请检查网络连接', 'error');
+            } else {
+                showToast('搜索请求失败，请稍后重试', 'error');
+            }
         }
     } finally {
         hideLoading();
