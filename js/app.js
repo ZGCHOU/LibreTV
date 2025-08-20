@@ -521,21 +521,7 @@ function removeCustomApi(index) {
     showToast('已移除自定义API: ' + apiName, 'info');
 }
 
-function toggleSettings(e) {
-    const settingsPanel = document.getElementById('settingsPanel');
-    if (!settingsPanel) return;
 
-    if (settingsPanel.classList.contains('show')) {
-        settingsPanel.classList.remove('show');
-    } else {
-        settingsPanel.classList.add('show');
-    }
-
-    if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-}
 
 // 设置事件监听器
 function setupEventListeners() {
@@ -546,18 +532,8 @@ function setupEventListeners() {
         }
     });
 
-    // 点击外部关闭设置面板和历史记录面板
+    // 点击外部关闭历史记录面板
     document.addEventListener('click', function (e) {
-        // 关闭设置面板
-        const settingsPanel = document.querySelector('#settingsPanel.show');
-        const settingsButton = document.querySelector('#settingsPanel .close-btn');
-
-        if (settingsPanel && settingsButton &&
-            !settingsPanel.contains(e.target) &&
-            !settingsButton.contains(e.target)) {
-            settingsPanel.classList.remove('show');
-        }
-
         // 关闭历史记录面板
         const historyPanel = document.querySelector('#historyPanel.show');
         const historyButton = document.querySelector('#historyPanel .close-btn');
@@ -569,34 +545,7 @@ function setupEventListeners() {
         }
     });
 
-    // 黄色内容过滤开关事件绑定
-    const yellowFilterToggle = document.getElementById('yellowFilterToggle');
-    if (yellowFilterToggle) {
-        yellowFilterToggle.addEventListener('change', function (e) {
-            localStorage.setItem('yellowFilterEnabled', e.target.checked);
 
-            // 控制黄色内容接口的显示状态
-            const adultdiv = document.getElementById('adultdiv');
-            if (adultdiv) {
-                if (e.target.checked === true) {
-                    adultdiv.style.display = 'none';
-                } else if (e.target.checked === false) {
-                    adultdiv.style.display = ''
-                }
-            } else {
-                // 添加成人API列表
-                addAdultAPI();
-            }
-        });
-    }
-
-    // 广告过滤开关事件绑定
-    const adFilterToggle = document.getElementById('adFilterToggle');
-    if (adFilterToggle) {
-        adFilterToggle.addEventListener('change', function (e) {
-            localStorage.setItem(PLAYER_CONFIG.adFilteringStorage, e.target.checked);
-        });
-    }
 }
 
 // 重置搜索区域
