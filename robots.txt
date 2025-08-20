@@ -1,2 +1,23 @@
 User-agent: *
-Disallow: /
+Allow: /
+
+# 允许搜索引擎爬取所有内容
+Allow: /index.html
+Allow: /about.html
+Allow: /player.html
+Allow: /watch.html
+Allow: /js/
+Allow: /css/
+Allow: /image/
+
+# 禁止爬取API和函数文件（保护敏感功能）
+Disallow: /api/
+Disallow: /functions/
+Disallow: /middleware.js
+Disallow: /server.mjs
+
+# 添加sitemap链接
+Sitemap: https://zhengxy.fun/sitemap.xml
+
+# 爬取延迟（秒）
+Crawl-delay: 1
