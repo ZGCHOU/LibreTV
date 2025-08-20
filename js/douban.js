@@ -86,12 +86,6 @@ function initDouban() {
             // 更新显示状态
             updateDoubanVisibility();
         });
-        
-        // 初始更新显示状态
-        updateDoubanVisibility();
-
-        // 滚动到页面顶部
-        window.scrollTo(0, 0);
     }
 
     // 加载用户标签
@@ -106,10 +100,30 @@ function initDouban() {
     // 换一批按钮事件监听
     setupDoubanRefreshBtn();
     
-    // 初始加载热门内容
-    if (localStorage.getItem('doubanEnabled') === 'true') {
-        renderRecommend(doubanCurrentTag, doubanPageSize, doubanPageStart);
-    }
+    // 强制显示豆瓣区域并加载内容
+    forceShowDoubanAndLoadContent();
+}
+
+// 强制显示豆瓣区域并加载内容
+function forceShowDoubanAndLoadContent() {
+    const doubanArea = document.getElementById('doubanArea');
+    if (!doubanArea) return;
+    
+    // 强制显示豆瓣区域
+    doubanArea.classList.remove('hidden');
+    
+    // 确保豆瓣功能启用
+    localStorage.setItem('doubanEnabled', 'true');
+    
+    // 延迟一点时间确保DOM完全加载后再加载内容
+    setTimeout(() => {
+        // 如果豆瓣结果为空，加载内容
+        const doubanResults = document.getElementById('douban-results');
+        if (doubanResults && doubanResults.children.length === 0) {
+            console.log('首次加载豆瓣热门内容...');
+            renderRecommend(doubanCurrentTag, doubanPageSize, doubanPageStart);
+        }
+    }, 100);
 }
 
 // 根据设置更新豆瓣区域的显示状态

@@ -94,12 +94,25 @@ document.addEventListener('DOMContentLoaded', function () {
             doubanToggle.checked = doubanEnabled === 'true';
         }
     }
+    
+    // 确保豆瓣功能默认启用
+    if (localStorage.getItem('doubanEnabled') !== 'false') {
+        localStorage.setItem('doubanEnabled', 'true');
+    }
 
     // 设置事件监听器
     setupEventListeners();
 
     // 初始检查成人API选中状态
     setTimeout(checkAdultAPIsSelected, 100);
+    
+    // 延迟确保豆瓣功能正确初始化
+    setTimeout(() => {
+        // 如果豆瓣功能存在，强制显示并加载内容
+        if (typeof forceShowDoubanAndLoadContent === 'function') {
+            forceShowDoubanAndLoadContent();
+        }
+    }, 200);
 });
 
 // 初始化API复选框
