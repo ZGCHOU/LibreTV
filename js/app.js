@@ -750,7 +750,11 @@ async function search() {
         document.getElementById('searchArea').classList.add('mb-8');
         document.getElementById('resultsArea').classList.remove('hidden');
 
-        // 豆瓣推荐区域保持显示，不隐藏
+        // 隐藏豆瓣推荐区域，让搜索结果优先显示
+        const doubanArea = document.getElementById('doubanArea');
+        if (doubanArea) {
+            doubanArea.classList.add('hidden');
+        }
 
         const resultsDiv = document.getElementById('results');
 
