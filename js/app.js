@@ -716,41 +716,50 @@ async function search() {
         // 优化搜索策略：先显示快速响应的结果，慢的API结果后续异步加载
         let allResults = [];
         let hasShownResults = false;
+        let completedAPIs = 0;
         
-        // 创建搜索Promise，每个Promise都有超时控制
-        const searchPromises = selectedAPIs.map(apiId => {
+        // 创建搜索Promise，每个Promise都有超时控制，并监听完成状态
+        const searchPromises = selectedAPIs.map((apiId, index) => {
             return Promise.race([
                 searchByAPIAndKeyWord(apiId, query),
                 new Promise((_, reject) => 
                     setTimeout(() => reject(new Error('API超时')), 5000) // 5秒超时
                 )
-            ]).catch(error => {
+            ]).then(results => {
+                // 成功完成
+                completedAPIs++;
+                console.log(`API ${apiId} 完成 (${completedAPIs}/${selectedAPIs.length})`);
+                
+                if (Array.isArray(results) && results.length > 0) {
+                    allResults = allResults.concat(results);
+                    
+                    // 如果还没有显示结果，立即显示当前结果
+                    if (!hasShownResults) {
+                        hasShownResults = true;
+                        console.log('快速响应：立即显示结果');
+                        showInitialResults(allResults, query);
+                    }
+                }
+                
+                return results;
+            }).catch(error => {
+                // 失败或超时
+                completedAPIs++;
                 console.warn(`API ${apiId} 搜索失败或超时:`, error.message);
                 return []; // 返回空数组
             });
         });
 
-        // 使用Promise.allSettled来获取所有结果，包括成功和失败的
-        const resultsArray = await Promise.allSettled(searchPromises);
+        // 等待所有Promise完成
+        await Promise.all(searchPromises);
         
-        // 处理结果
-        resultsArray.forEach((result, index) => {
-            if (result.status === 'fulfilled' && Array.isArray(result.value) && result.value.length > 0) {
-                allResults = allResults.concat(result.value);
-                
-                // 如果还没有显示结果，立即显示当前结果
-                if (!hasShownResults) {
-                    hasShownResults = true;
-                    showInitialResults(allResults, query);
-                }
-            }
-        });
-
         // 如果还没有显示结果，现在显示最终结果
         if (!hasShownResults) {
+            console.log('所有API完成，显示最终结果');
             showInitialResults(allResults, query);
         } else {
             // 更新已显示的结果
+            console.log('更新完整结果');
             updateSearchResults(allResults, query);
         }
 
