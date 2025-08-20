@@ -56,13 +56,43 @@ document.addEventListener('DOMContentLoaded', function () {
     // 设置黄色内容过滤器开关初始状态
     const yellowFilterToggle = document.getElementById('yellowFilterToggle');
     if (yellowFilterToggle) {
-        yellowFilterToggle.checked = localStorage.getItem('yellowFilterEnabled') === 'true';
+        // 如果没有设置过，默认开启；如果设置过，使用用户的选择
+        const yellowFilterEnabled = localStorage.getItem('yellowFilterEnabled');
+        if (yellowFilterEnabled === null) {
+            // 默认开启
+            localStorage.setItem('yellowFilterEnabled', 'true');
+            yellowFilterToggle.checked = true;
+        } else {
+            yellowFilterToggle.checked = yellowFilterEnabled === 'true';
+        }
     }
 
     // 设置广告过滤开关初始状态
     const adFilterToggle = document.getElementById('adFilterToggle');
     if (adFilterToggle) {
-        adFilterToggle.checked = localStorage.getItem(PLAYER_CONFIG.adFilteringStorage) !== 'false'; // 默认为true
+        // 如果没有设置过，默认开启；如果设置过，使用用户的选择
+        const adFilterEnabled = localStorage.getItem(PLAYER_CONFIG.adFilteringStorage);
+        if (adFilterEnabled === null) {
+            // 默认开启
+            localStorage.setItem(PLAYER_CONFIG.adFilteringStorage, 'true');
+            adFilterToggle.checked = true;
+        } else {
+            adFilterToggle.checked = adFilterEnabled !== 'false';
+        }
+    }
+
+    // 设置豆瓣开关初始状态
+    const doubanToggle = document.getElementById('doubanToggle');
+    if (doubanToggle) {
+        // 如果没有设置过，默认开启；如果设置过，使用用户的选择
+        const doubanEnabled = localStorage.getItem('doubanEnabled');
+        if (doubanEnabled === null) {
+            // 默认开启
+            localStorage.setItem('doubanEnabled', 'true');
+            doubanToggle.checked = true;
+        } else {
+            doubanToggle.checked = doubanEnabled === 'true';
+        }
     }
 
     // 设置事件监听器
