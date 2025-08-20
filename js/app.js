@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // 默认选中所有普通资源（非成人内容）
         selectedAPIs = Object.keys(API_SITES).filter(key => !API_SITES[key].adult);
         localStorage.setItem('selectedAPIs', JSON.stringify(selectedAPIs));
+        console.log('首次初始化，已选中API:', selectedAPIs);
 
         // 默认选中过滤开关
         localStorage.setItem('yellowFilterEnabled', 'true');
@@ -52,6 +53,16 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('已自动选中所有普通资源API');
         }
     }
+    
+    // 确保selectedAPIs不为空
+    if (selectedAPIs.length === 0) {
+        console.warn('selectedAPIs为空，重新初始化...');
+        selectedAPIs = Object.keys(API_SITES).filter(key => !API_SITES[key].adult);
+        localStorage.setItem('selectedAPIs', JSON.stringify(selectedAPIs));
+        console.log('重新初始化后，已选中API:', selectedAPIs);
+    }
+    
+    console.log('当前选中的API数量:', selectedAPIs.length);
 
     // 设置黄色内容过滤器开关初始状态
     const yellowFilterToggle = document.getElementById('yellowFilterToggle');
@@ -689,7 +700,9 @@ async function search() {
         return;
     }
 
+    console.log('搜索时选中的API:', selectedAPIs);
     if (selectedAPIs.length === 0) {
+        console.error('selectedAPIs为空，无法搜索');
         showToast('请至少选择一个API源', 'warning');
         return;
     }
